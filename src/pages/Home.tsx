@@ -224,10 +224,10 @@ export function Home() {
 
         <div className="flex gap-10 overflow-x-auto no-scrollbar pb-10 px-6 md:px-15">
           {[
-            { id: "01", title: "Building Construction", img: "/src/assets/images/modern_building_uganda_1779222673896.png" },
+            { id: "01", title: "Building Construction", img: "/src/assets/images/construction_site_hero_1779222656099.png" },
             { id: "02", title: "Architectural Design", img: "/src/assets/images/architectural_render_3d_1779222706847.png" },
             { id: "03", title: "Engineering Consultancy", img: "/src/assets/images/engineering_team_about_1779222690871.png" },
-            { id: "04", title: "Quantity Surveying", img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=800" }
+            { id: "04", title: "Quantity Surveying", img: "/src/assets/images/blueprint_draft_table_1779226245180.png" }
           ].map((s) => (
             <Link to="/services" key={s.id} className="min-w-[300px] md:min-w-[400px] group relative aspect-[16/10] overflow-hidden border border-stone-100 shadow-lg">
               <img src={s.img} alt={s.title} className="w-full h-full object-cover grayscale opacity-10 group-hover:grayscale-0 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" />

@@ -47,7 +47,7 @@ const projects = [
     category: "Site Planning",
     location: "Mbarara, Uganda",
     year: "2024",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800",
+    image: "/src/assets/images/construction_crane_skyline_1779226263430.png",
     description: "Comprehensive site planning for a 50-acre mixed-use development focusing on utility optimization.",
     stats: { area: "50 Acres", zones: "12", status: "Planning" }
   },
@@ -57,7 +57,7 @@ const projects = [
     category: "Building Construction",
     location: "Kampala, Uganda",
     year: "2023",
-    image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=800",
+    image: "/src/assets/images/modern_corporate_interior_1779226296836.png",
     description: "State-of-the-art corporate headquarters focused on vertical efficiency and urban integration.",
     stats: { height: "120m", floors: "28", status: "Completed" }
   },
@@ -67,7 +67,7 @@ const projects = [
     category: "Site Planning",
     location: "Kampala, Uganda",
     year: "2022",
-    image: "https://images.unsplash.com/photo-1541913057-9473b9e4a36f?auto=format&fit=crop&q=80&w=800",
+    image: "/src/assets/images/blueprint_draft_table_1779226245180.png",
     description: "Sustainable residential site planning with integrated water management systems.",
     stats: { area: "15 Acres", houses: "45", status: "Completed" }
   }

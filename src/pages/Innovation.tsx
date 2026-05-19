@@ -97,7 +97,7 @@ export function Innovation() {
           <div className="md:w-1/2 relative">
             <div className="aspect-square overflow-hidden shadow-2xl relative group">
               <img 
-                src="/src/assets/images/modern_building_uganda_1779222673896.png" 
+                src="/src/assets/images/construction_crane_skyline_1779226263430.png" 
                 alt="Future Building" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
               />
@@ -159,27 +159,34 @@ export function Innovation() {
            </div>
 
            <div className="relative aspect-square overflow-hidden shadow-2xl">
-              <div className="relative h-full w-full bg-white p-12 md:p-20 overflow-hidden flex flex-col justify-center gap-12 group">
-                 <Microscope size={120} className="text-gold-500 opacity-5 absolute -top-10 -right-10 rotate-12 group-hover:rotate-0 transition-transform duration-700" />
-                 <div className="space-y-6">
-                    <div className="w-16 h-16 border border-gold-500 flex items-center justify-center">
-                       <Rocket size={32} className="text-gold-500" />
-                    </div>
-                    <h3 className="text-4xl font-display font-bold uppercase tracking-tight text-stone-900">Projected <span className="text-gold-gradient">Impact</span></h3>
-                    <div className="space-y-4">
-                       {[
-                         { label: "Carbon Savings", value: "30,000 Tons" },
-                         { label: "Energy Efficiency", value: "45% Increase" },
-                         { label: "Water Reclamation", value: "12M Liters/Year" }
-                       ].map(stat => (
-                         <div key={stat.label} className="p-5 border border-stone-100 flex justify-between items-center transition-all hover:bg-stone-50">
-                            <span className="text-stone-300 text-[9px] font-bold uppercase tracking-widest">{stat.label}</span>
-                            <span className="font-display font-bold text-gold-500 tracking-wider">{stat.value}</span>
-                         </div>
-                       ))}
-                    </div>
+              <div className="relative h-full w-full bg-charcoal overflow-hidden group">
+                 <img 
+                   src="/src/assets/images/safety_equipment_site_1779226278945.png" 
+                   alt="R&D Lab" 
+                   className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[2s]" 
+                 />
+                 <div className="absolute inset-0 p-12 md:p-20 overflow-hidden flex flex-col justify-center gap-12">
+                   <Microscope size={120} className="text-gold-500 opacity-5 absolute -top-10 -right-10 rotate-12 group-hover:rotate-0 transition-transform duration-700" />
+                   <div className="space-y-6 relative z-10">
+                      <div className="w-16 h-16 border border-gold-500 flex items-center justify-center bg-white/10 backdrop-blur-md">
+                         <Rocket size={32} className="text-gold-500" />
+                      </div>
+                      <h3 className="text-4xl font-display font-bold uppercase tracking-tight text-white">Projected <span className="text-gold-gradient">Impact</span></h3>
+                      <div className="space-y-4">
+                         {[
+                           { label: "Carbon Savings", value: "30,000 Tons" },
+                           { label: "Energy Efficiency", value: "45% Increase" },
+                           { label: "Water Reclamation", value: "12M Liters/Year" }
+                         ].map(stat => (
+                           <div key={stat.label} className="p-5 border border-white/10 bg-white/5 backdrop-blur-md flex justify-between items-center transition-all hover:bg-white/10">
+                              <span className="text-white/40 text-[9px] font-bold uppercase tracking-widest">{stat.label}</span>
+                              <span className="font-display font-bold text-gold-500 tracking-wider">{stat.value}</span>
+                           </div>
+                         ))}
+                      </div>
+                   </div>
+                   <button className="btn-outline !w-full !border-white/20 !text-white !bg-transparent hover:!bg-white/10 relative z-10">Sustainability Paper</button>
                  </div>
-                 <button className="btn-outline !w-full">Sustainability Paper</button>
               </div>
            </div>
         </div>
