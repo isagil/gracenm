@@ -92,7 +92,7 @@ export function Contact() {
                  </div>
               </div>
 
-              <div className="relative aspect-video w-full rounded-[2.5rem] border border-stone-100 overflow-hidden group shadow-2xl">
+              <div className="relative aspect-video w-full border border-stone-100 overflow-hidden group shadow-2xl">
                  <img 
                     src="https://images.unsplash.com/photo-1541976590917-0d92f44601df?auto=format&fit=crop&q=80&w=1200" 
                     alt="Map Placeholder" 
@@ -174,7 +174,7 @@ export function Contact() {
                          name="message" placeholder="YOUR PROJECT BRIEF OR MESSAGE..."
                          rows={5}
                          value={formData.message} onChange={handleChange}
-                         className="w-full bg-white border border-stone-100 rounded-2xl px-8 py-5 text-stone-900 placeholder:text-stone-300 focus:border-gold-500 outline-none transition-colors text-xs font-bold tracking-widest resize-none"
+                         className="w-full bg-white border border-stone-100 px-8 py-5 text-stone-900 placeholder:text-stone-300 focus:border-gold-500 outline-none transition-colors text-xs font-bold tracking-widest resize-none"
                        />
                     </div>
                     

@@ -33,10 +33,10 @@ export function Home() {
           >
             <div className="pre-title">Engineering Tomorrow</div>
             
-            <h1 className="text-6xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-stone-900">
-              Building Excellence.<br />
-              <span className="text-gold-gradient">Delivering</span> Trust.
-            </h1>
+            <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-stone-900">
+               Building Excellence.<br />
+               <span className="text-gold-gradient italic">Delivering</span> Trust.
+             </h1>
 
             <p className="max-w-xl text-lg md:text-xl text-stone-400 font-light leading-relaxed">
               GRACE NM Consultant & Construction Company PLC provides professional construction, engineering, and consultancy services with a commitment to quality, innovation, and client satisfaction.
@@ -100,7 +100,7 @@ export function Home() {
       </section>
 
       {/* About Preview Section */}
-      <section className="py-32 px-6 md:px-15 relative overflow-hidden bg-charcoal">
+      <section className="py-20 md:py-32 px-6 md:px-15 relative overflow-hidden bg-charcoal">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-10">
             <div className="pre-title">Our Legacy</div>
@@ -143,11 +143,11 @@ export function Home() {
       </section>
 
       {/* Featured Project Spotlight */}
-      <section className="py-40 px-6 md:px-15 bg-white relative overflow-hidden">
+      <section className="py-24 md:py-40 px-6 md:px-15 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col lg:flex-row gap-24 items-center">
              <div className="lg:w-7/12 relative group">
-                <div className="relative aspect-[16/10] rounded-[2rem] overflow-hidden shadow-2xl">
+                <div className="relative aspect-[16/10] overflow-hidden shadow-2xl">
                    <img 
                       src="/src/assets/images/construction_site_hero_1779222656099.png" 
                       alt="Featured Project" 
@@ -209,7 +209,7 @@ export function Home() {
       </section>
 
       {/* Services Scroller Feature */}
-      <section className="py-32 bg-white border-y border-stone-100 relative overflow-hidden">
+      <section className="py-20 md:py-32 bg-white border-y border-stone-100 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 md:px-15 mb-20 flex flex-col md:flex-row md:items-end justify-between gap-10">
           <div className="space-y-6 max-w-2xl">
             <div className="pre-title">Core Services</div>
@@ -229,7 +229,7 @@ export function Home() {
             { id: "03", title: "Engineering Consultancy", img: "/src/assets/images/engineering_team_about_1779222690871.png" },
             { id: "04", title: "Quantity Surveying", img: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=800" }
           ].map((s) => (
-            <Link to="/services" key={s.id} className="min-w-[400px] group relative aspect-[16/10] overflow-hidden border border-stone-100 shadow-lg">
+            <Link to="/services" key={s.id} className="min-w-[300px] md:min-w-[400px] group relative aspect-[16/10] overflow-hidden border border-stone-100 shadow-lg">
               <img src={s.img} alt={s.title} className="w-full h-full object-cover grayscale opacity-10 group-hover:grayscale-0 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" />
               <div className="absolute inset-0 bg-linear-to-t from-stone-100 via-stone-100/10 to-transparent opacity-60" />
               <div className="absolute inset-0 p-12 flex flex-col justify-end gap-2">
@@ -243,7 +243,7 @@ export function Home() {
       </section>
 
       {/* Trust Quote / Founders Message */}
-      <section className="py-40 px-6 md:px-15 text-center bg-charcoal">
+      <section className="py-24 md:py-40 px-6 md:px-15 text-center bg-charcoal">
         <div className="max-w-4xl mx-auto space-y-12">
           <Quote className="w-16 h-16 text-gold-500/10 mx-auto" />
           <h2 className="text-3xl md:text-5xl font-display font-medium text-stone-900 leading-tight italic">

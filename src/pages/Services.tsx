@@ -70,31 +70,31 @@ export function Services() {
   return (
     <div className="pt-32 pb-24 overflow-hidden bg-white">
       {/* Hero */}
-      <section className="px-6 md:px-15 mb-32 relative">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <section className="px-6 md:px-15 mb-16 md:mb-32 relative">
+        <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
            <div className="pre-title">Our Solutions</div>
-          <h1 className="text-5xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase max-w-4xl text-stone-900">
+          <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase max-w-4xl text-stone-900">
             Precision <span className="text-gold-gradient italic">Engineering</span> For A Modern World.
           </h1>
-          <p className="max-w-3xl text-xl text-stone-400 font-light leading-relaxed">
+          <p className="max-w-3xl text-lg md:text-xl text-stone-400 font-light leading-relaxed">
             From deep-earth foundations to the highest spires, GRACE NM provides a full spectrum of construction and consultancy services defined by quality and technological leadership.
           </p>
         </div>
       </section>
 
       {/* Services Grid */}
-      <section className="px-6 md:px-15 mb-40 relative">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+      <section className="px-6 md:px-15 mb-24 md:mb-40 relative">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
            {mainServices.map((service, i) => (
              <motion.div
                key={service.title}
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
+               initial={{ opacity: 0, scale: 0.95 }}
+               whileInView={{ opacity: 1, scale: 1 }}
                viewport={{ once: true }}
                transition={{ delay: i * 0.1 }}
-               className="friendly-card flex flex-col justify-between"
+               className="friendly-card flex flex-col justify-between group"
              >
-               <span className="absolute top-10 right-10 text-6xl font-display font-bold text-stone-900/[0.03] group-hover:text-gold-500/10 transition-colors uppercase">
+               <span className="absolute top-10 right-10 text-5xl md:text-6xl font-display font-bold text-stone-900/[0.03] group-hover:text-gold-500/10 transition-colors uppercase">
                  {service.id}
                </span>
 
@@ -159,7 +159,7 @@ export function Services() {
             </div>
 
             <div className="lg:w-1/2 relative">
-               <div className="relative aspect-square md:aspect-auto md:h-[800px] rounded-[3rem] overflow-hidden shadow-2xl">
+               <div className="relative aspect-square md:aspect-auto md:h-[800px] overflow-hidden shadow-2xl">
                   <img 
                     src="/src/assets/images/architectural_render_3d_1779222706847.png" 
                     alt="Process Render" 

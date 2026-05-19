@@ -19,16 +19,16 @@ export function About() {
   return (
     <div className="pt-32 pb-24 overflow-hidden bg-white">
       {/* Hero Section */}
-      <section className="px-6 md:px-15 mb-24">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-end">
-          <div className="space-y-8">
+      <section className="px-6 md:px-15 mb-16 md:mb-24">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20 items-end">
+          <div className="space-y-6 md:space-y-8">
             <div className="pre-title">Our Story</div>
-            <h1 className="text-5xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-stone-900">
+            <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-stone-900">
               Building <span className="text-gold-gradient italic">Value</span> From The Ground Up.
             </h1>
           </div>
           <div className="space-y-6">
-            <p className="text-stone-400 text-xl font-light leading-relaxed">
+            <p className="text-stone-400 text-lg md:text-xl font-light leading-relaxed">
               GRACE NM Consultant & Construction Company PLC is driven by a singular purpose: to transform the landscape of East Africa through engineering precision and architectural brilliance.
             </p>
           </div>
@@ -36,26 +36,26 @@ export function About() {
       </section>
 
       {/* Vision & Mission */}
-      <section className="px-6 md:px-15 mb-40">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+      <section className="px-6 md:px-15 mb-24 md:mb-40">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
           <div className="friendly-card group overflow-hidden relative">
             <Eye className="absolute -top-10 -right-10 text-gold-500/5 w-64 h-64 rotate-12" />
-            <div className="w-12 h-12 rounded-full border border-gold-500 flex items-center justify-center text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all">
+            <div className="w-12 h-12 border border-gold-500 flex items-center justify-center text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all">
                <Target size={24} />
             </div>
-            <h2 className="text-4xl font-display font-bold uppercase tracking-tight text-stone-900 relative z-10">Our Vision</h2>
-            <p className="text-stone-400 text-xl font-light leading-relaxed relative z-10">
+            <h2 className="text-3xl md:text-4xl font-display font-bold uppercase tracking-tight text-stone-900 relative z-10">Our Vision</h2>
+            <p className="text-stone-400 text-lg md:text-xl font-light leading-relaxed relative z-10">
               To become one of the leading and most trusted construction and consultancy companies in East Africa.
             </p>
           </div>
           
           <div className="friendly-card group overflow-hidden relative">
             <Target className="absolute -top-10 -right-10 text-gold-500/5 w-64 h-64 -rotate-12" />
-            <div className="w-12 h-12 rounded-full border border-gold-500 flex items-center justify-center text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all">
+            <div className="w-12 h-12 border border-gold-500 flex items-center justify-center text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all">
                <Eye size={24} />
             </div>
-            <h2 className="text-4xl font-display font-bold uppercase tracking-tight text-stone-900 relative z-10">Our Mission</h2>
-            <p className="text-stone-400 text-xl font-light leading-relaxed relative z-10">
+            <h2 className="text-3xl md:text-4xl font-display font-bold uppercase tracking-tight text-stone-900 relative z-10">Our Mission</h2>
+            <p className="text-stone-400 text-lg md:text-xl font-light leading-relaxed relative z-10">
               To deliver quality construction and consultancy services through professionalism, integrity, innovation, and customer satisfaction.
             </p>
           </div>

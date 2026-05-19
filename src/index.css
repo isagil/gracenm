@@ -31,36 +31,45 @@
 
 @layer utilities {
   .blueprint-bg {
-    background-image: radial-gradient(circle at 1px 1px, rgba(155, 135, 45, 0.08) 1px, transparent 0);
-    background-size: 40px 40px;
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(155, 135, 45, 0.08) 1px, transparent 0),
+      linear-gradient(to right, rgba(155, 135, 45, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(155, 135, 45, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px, 120px 120px, 120px 120px;
+  }
+
+  .grain {
+    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+    filter: contrast(150%) brightness(1000%);
+    @apply opacity-[0.03] pointer-events-none fixed inset-0 z-100;
   }
 
   .glass {
-    @apply bg-white/70 backdrop-blur-2xl border border-stone-200/50;
+    @apply bg-white/70 backdrop-blur-2xl border border-stone-200/50 shadow-2xl;
   }
 
   .friendly-card {
-    @apply bg-white border border-stone-100 shadow-xl shadow-stone-200/40 p-8 md:p-12 transition-all duration-500 hover:shadow-2xl hover:shadow-gold-500/5;
+    @apply bg-white border border-stone-100 shadow-xl shadow-stone-200/20 p-8 md:p-12 transition-all duration-700 hover:shadow-2xl hover:shadow-gold-500/10 hover:-translate-y-1;
   }
 
   .text-gold-gradient {
-    @apply bg-clip-text text-transparent bg-linear-to-br from-[#C3B346] to-[#8F7E22];
+    @apply bg-clip-text text-transparent bg-linear-to-br from-[#D4AF37] via-[#C5A028] to-[#996515];
   }
 
   .bg-gold-gradient {
-    @apply bg-linear-to-br from-[#C3B346] to-[#8F7E22];
+    @apply bg-linear-to-br from-[#D4AF37] via-[#C5A028] to-[#996515];
   }
 
   .btn-gold {
-    @apply bg-linear-to-br from-[#C3B346] to-[#8F7E22] text-white px-10 py-5 text-[11px] font-black uppercase tracking-[3px] rounded-full cursor-pointer hover:opacity-95 transition-all hover:scale-[1.05] active:scale-95 shadow-[0_15px_40px_rgba(155,135,45,0.2)];
+    @apply bg-linear-to-br from-[#D4AF37] via-[#C5A028] to-[#996515] text-white px-10 py-5 text-[11px] font-black uppercase tracking-[3px] rounded-full cursor-pointer hover:opacity-95 transition-all hover:scale-[1.05] active:scale-95 shadow-[0_20px_50px_rgba(155,135,45,0.3)];
   }
 
   .btn-outline {
-    @apply border-2 border-stone-100 text-stone-900 px-10 py-5 text-[11px] font-black uppercase tracking-[3px] rounded-full bg-white hover:bg-stone-50 transition-all hover:border-gold-500/30;
+    @apply border-2 border-stone-200 text-stone-900 px-10 py-5 text-[11px] font-black uppercase tracking-[3px] rounded-full bg-white hover:bg-stone-50 transition-all hover:border-gold-500/50 shadow-sm hover:shadow-lg;
   }
 
   .pre-title {
-    @apply text-[11px] uppercase tracking-[4px] text-gold-500 mb-6 flex items-center gap-3 font-display;
+    @apply text-[11px] uppercase tracking-[4px] text-gold-500 mb-6 flex items-center gap-3 font-display font-black;
   }
 
   .pre-title::after {

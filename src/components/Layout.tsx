@@ -81,24 +81,26 @@ export function Layout() {
 
       {/* Background Elements */}
       <div className="blueprint-bg absolute inset-0 pointer-events-none z-0" />
-      <div className="absolute top-[-100px] right-[-100px] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(181,164,55,0.1)_0%,transparent_70%)] z-0 pointer-events-none" />
+      <div className="grain" />
+      <div className="absolute top-[-100px] right-[-100px] w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(212,175,55,0.08)_0%,transparent_70%)] z-0 pointer-events-none animate-pulse" />
+      <div className="absolute bottom-[-200px] left-[-200px] w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(212,175,55,0.05)_0%,transparent_70%)] z-0 pointer-events-none" />
 
       {/* Scroll Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-[2px] bg-gold-gradient z-60 origin-left"
+        className="fixed top-0 left-0 right-0 h-[3px] bg-gold-gradient z-60 origin-left"
         style={{ scaleX }}
       />
 
       {/* Navbar */}
       <nav
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500 h-20 px-6 md:px-15 flex items-center justify-between border-b",
-          isScrolled ? "bg-white/80 backdrop-blur-md border-stone-100" : "bg-transparent border-transparent"
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-700 h-24 px-6 md:px-15 flex items-center justify-between border-b",
+          isScrolled ? "bg-white/90 backdrop-blur-xl border-stone-200/50 shadow-sm h-20" : "bg-transparent border-transparent"
         )}
       >
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="text-xl font-display font-black tracking-[4px] text-stone-900">
-            GRACE <span className="text-gold-500">NM</span>
+          <div className="text-2xl font-display font-black tracking-[6px] text-stone-900 group-hover:scale-105 transition-transform duration-500">
+            GRACE <span className="text-gold-gradient">NM</span>
           </div>
         </Link>
 
@@ -144,29 +146,53 @@ export function Layout() {
         initial={false}
         animate={isMenuOpen ? "open" : "closed"}
         variants={{
-          open: { clipPath: "circle(150% at 100% 0%)", opacity: 1 },
-          closed: { clipPath: "circle(0% at 100% 0%)", opacity: 0 }
+          open: { 
+            clipPath: "inset(0% 0% 0% 0%)", 
+            opacity: 1,
+            transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+          },
+          closed: { 
+            clipPath: "inset(0% 0% 100% 0%)", 
+            opacity: 0,
+            transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+          }
         }}
         className="fixed inset-0 z-40 bg-white lg:hidden pointer-events-auto overflow-hidden h-screen"
       >
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          {navigation.map((item) => (
-            <Link
+        <div className="absolute inset-0 blueprint-bg opacity-50" />
+        <div className="flex flex-col items-center justify-center h-full gap-10 relative z-10 p-6">
+          {navigation.map((item, i) => (
+            <motion.div
               key={item.name}
-              to={item.href}
-              className="text-4xl font-display font-bold text-stone-900 hover:text-gold-500 transition-colors uppercase tracking-widest italic"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isMenuOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ delay: i * 0.05 + 0.2 }}
+            >
+              <Link
+                to={item.href}
+                className={cn(
+                  "text-5xl font-display font-black text-stone-900 transition-all uppercase tracking-tighter italic hover:text-gold-500",
+                  location.pathname === item.href && "text-gold-500"
+                )}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            </motion.div>
+          ))}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isMenuOpen ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+            transition={{ delay: navigation.length * 0.05 + 0.3 }}
+          >
+            <Link
+              to="/quote"
+              className="btn-gold !text-lg !px-16 !py-6"
               onClick={() => setIsMenuOpen(false)}
             >
-              {item.name}
+              GET QUOTE
             </Link>
-          ))}
-          <Link
-            to="/quote"
-            className="btn-gold !text-lg !px-12 !py-4"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            GET QUOTE
-          </Link>
+          </motion.div>
         </div>
       </motion.div>
 
