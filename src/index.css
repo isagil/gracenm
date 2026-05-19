@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Montserrat:wght@100;300;400;600;800;900&family=Poppins:wght@100;200;300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Montserrat", sans-serif;
+  --font-body: "Poppins", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-gold-500: #9B872D;
+  --color-space-black: #FFFFFF;
+  --color-charcoal: #F8F7F2;
+  --color-graphite: #EFECE5;
+  --color-soft-white: #111111;
+  --color-stone-900: #1C1917;
+  --color-stone-600: #57534E;
+  --color-stone-400: #A8A29E;
+}
+
+@layer base {
+  body {
+    @apply bg-space-black text-stone-600 selection:bg-gold-500/20 selection:text-stone-900 font-body;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold tracking-tight text-stone-900;
+  }
+}
+
+@layer utilities {
+  .blueprint-bg {
+    background-image: radial-gradient(circle at 1px 1px, rgba(155, 135, 45, 0.08) 1px, transparent 0);
+    background-size: 40px 40px;
+  }
+
+  .glass {
+    @apply bg-white/70 backdrop-blur-2xl border border-stone-200/50;
+  }
+
+  .friendly-card {
+    @apply bg-white border border-stone-100 shadow-xl shadow-stone-200/40 p-8 md:p-12 transition-all duration-500 hover:shadow-2xl hover:shadow-gold-500/5;
+  }
+
+  .text-gold-gradient {
+    @apply bg-clip-text text-transparent bg-linear-to-br from-[#C3B346] to-[#8F7E22];
+  }
+
+  .bg-gold-gradient {
+    @apply bg-linear-to-br from-[#C3B346] to-[#8F7E22];
+  }
+
+  .btn-gold {
+    @apply bg-linear-to-br from-[#C3B346] to-[#8F7E22] text-white px-10 py-5 text-[11px] font-black uppercase tracking-[3px] rounded-full cursor-pointer hover:opacity-95 transition-all hover:scale-[1.05] active:scale-95 shadow-[0_15px_40px_rgba(155,135,45,0.2)];
+  }
+
+  .btn-outline {
+    @apply border-2 border-stone-100 text-stone-900 px-10 py-5 text-[11px] font-black uppercase tracking-[3px] rounded-full bg-white hover:bg-stone-50 transition-all hover:border-gold-500/30;
+  }
+
+  .pre-title {
+    @apply text-[11px] uppercase tracking-[4px] text-gold-500 mb-6 flex items-center gap-3 font-display;
+  }
+
+  .pre-title::after {
+    content: '';
+    @apply block w-10 h-[1px] bg-gold-500;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
