@@ -10,6 +10,7 @@ import { About } from "./pages/About";
 import { Services } from "./pages/Services";
 import { Projects } from "./pages/Projects";
 import { Innovation } from "./pages/Innovation";
+import { AIArchitect } from "./pages/AIArchitect";
 import { Testimonials } from "./pages/Testimonials";
 import { FAQ } from "./pages/FAQ";
 import { Blog } from "./pages/Blog";
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/innovation" element={<Innovation />} />
+          <Route path="/ai-architect" element={<AIArchitect />} />
           <Route path="/testimonials" element={<Testimonials />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/blog" element={<Blog />} />
