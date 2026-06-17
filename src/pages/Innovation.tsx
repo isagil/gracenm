@@ -41,18 +41,31 @@ const sustainability = [
 
 export function Innovation() {
   return (
-    <div className="pt-32 pb-24 overflow-hidden bg-white">
+    <div className="overflow-hidden bg-white">
       {/* Hero */}
-      <section className="px-6 md:px-15 mb-32 relative">
-        <div className="max-w-7xl space-y-8">
-           <div className="pre-title">Digital Construction Frontier</div>
-          <h1 className="text-5xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase max-w-4xl text-stone-900">
-            Architecting <span className="text-gold-gradient italic">The Digital Twin.</span>
-          </h1>
-          <p className="max-w-3xl text-xl text-stone-400 font-light leading-relaxed">
-            At Grace NM, we don't just build—we simulate. We utilize the world's most advanced engineering technologies to ensure your project is efficient, sustainable, and ready for the 22nd century.
-          </p>
+      <section className="relative min-h-[50vh] flex items-center pt-32 pb-20 bg-stone-950 text-white overflow-hidden mb-20">
+        {/* Background Image / Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/src/assets/images/architectural_render_3d_1779222706847.png" 
+            alt="Architectural Render 3D" 
+            className="w-full h-full object-cover opacity-20 filter grayscale contrast-125 brightness-50"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/80 to-transparent" />
+          <div className="blueprint-bg absolute inset-0 opacity-15" />
         </div>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-15 relative z-10 w-full space-y-6">
+           <div className="pre-title text-gold-500 border-gold-500/30">Digital Construction Frontier</div>
+           <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-white max-w-4xl">
+             Architecting <span className="text-gold-gradient italic">The Digital Twin.</span>
+           </h1>
+           <p className="max-w-3xl text-stone-300 text-lg md:text-xl font-light leading-relaxed">
+             At Grace NM, we don't just build—we simulate. We utilize the world's most advanced engineering technologies to ensure your project is efficient, sustainable, and ready for future generations.
+           </p>
+        </div>
+        <div className="absolute bottom-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
       </section>
 
       {/* Tech Grid */}

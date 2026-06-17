@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Phone, Mail, MapPin, 
   MessageSquare, Globe, Clock,
   ArrowRight, Send, CheckCircle2,
-  Instagram, Twitter, Facebook, Linkedin
+  Instagram, Twitter, Facebook, Linkedin, AlertCircle
 } from "lucide-react";
+import { getSupabase } from "../lib/supabase";
+import { useCustomizer } from "../context/CustomizerContext";
 
 const cn = (...inputs: any[]) => inputs.filter(Boolean).join(" ");
 
 export function Contact() {
+  const { config } = useCustomizer();
   const [isSent, setIsSent] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [supabaseConfigured, setSupabaseConfigured] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,32 +25,84 @@ export function Contact() {
     message: ""
   });
 
+  useEffect(() => {
+    const sb = getSupabase();
+    setSupabaseConfigured(!!sb);
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSent(true);
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    const sb = getSupabase();
+    if (sb) {
+      try {
+        const { error } = await sb
+          .from("contact_submissions")
+          .insert([formData]);
+
+        if (error) {
+          console.error("Supabase Submission Error:", error);
+          const detail = error.message?.includes("schema cache") || error.message?.includes("does not exist")
+            ? " Please execute the SQL schemas defined in 'supabase_schema.sql' in your Supabase SQL editor."
+            : "";
+          setErrorMessage(`Database rejection: ${error.message}.${detail}`);
+        } else {
+          setIsSent(true);
+        }
+      } catch (err: any) {
+        console.error("Submission failed:", err);
+        setErrorMessage(err?.message || "An unexpected connection error occurred.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      // Local demo persistence fallback
+      console.log("No Supabase configuration found. Persisting submission locally (Simulated):", formData);
+      setTimeout(() => {
+        setIsSent(true);
+        setIsSubmitting(false);
+      }, 1000);
+    }
   };
 
   return (
-    <div className="pt-32 pb-24 overflow-hidden bg-white min-h-screen">
+    <div className="overflow-hidden bg-white min-h-screen">
       {/* Header */}
-      <section className="px-6 md:px-15 mb-24">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-end">
-           <div className="space-y-8">
-              <div className="pre-title">Get In Touch</div>
-              <h1 className="text-5xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-stone-900">
-                Contact <span className="text-gold-gradient italic">Center.</span>
-              </h1>
-           </div>
-           <div className="space-y-6">
-              <p className="text-stone-400 text-xl font-light leading-relaxed">
-                Connect with our engineering command center in Kampala. Whether it's a new development or a technical inquiry, we're ready to deploy.
-              </p>
-           </div>
+      <section className="relative min-h-[50vh] flex items-center pt-32 pb-20 bg-stone-950 text-white overflow-hidden mb-20">
+        {/* Background Image / Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={config.photos.contactSection} 
+            alt="Construction Crane Skyline" 
+            className="w-full h-full object-cover opacity-20 filter grayscale contrast-125 brightness-50"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/80 to-transparent" />
+          <div className="blueprint-bg absolute inset-0 opacity-15" />
         </div>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-15 relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-20 items-end">
+             <div className="lg:col-span-7 space-y-6">
+                <div className="pre-title text-gold-500 border-gold-500/30">Get In Touch</div>
+                <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-white">
+                  Contact <span className="text-gold-gradient italic">Center.</span>
+                </h1>
+             </div>
+             <div className="lg:col-span-5 lg:pb-4">
+                <p className="text-stone-300 text-lg md:text-xl font-light leading-relaxed">
+                  Connect with our engineering command center in Kampala. Whether it's a new development or a technical inquiry, we're ready to deploy.
+                </p>
+             </div>
+          </div>
+        </div>
+        <div className="absolute bottom-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
       </section>
 
       {/* Main Grid */}
@@ -178,9 +236,37 @@ export function Contact() {
                        />
                     </div>
                     
-                    <button type="submit" className="btn-gold !w-full flex items-center justify-center gap-3">
-                       Send Message <Send size={18} />
-                    </button>
+                    {errorMessage && (
+                      <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-3 font-semibold leading-relaxed mb-4">
+                        <AlertCircle size={16} className="shrink-0" />
+                        <span>{errorMessage}</span>
+                      </div>
+                    )}
+
+                    <div className="flex flex-col gap-3">
+                      <button 
+                        type="submit" 
+                        disabled={isSubmitting}
+                        className="btn-gold !w-full flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      >
+                        {isSubmitting ? "Transmitting..." : <>Send Message <Send size={18} /></>}
+                      </button>
+
+                      <div className="flex items-center justify-between text-[9px] uppercase tracking-widest font-black text-stone-400 px-1 pt-1">
+                        <span>Transmission:</span>
+                        {supabaseConfigured ? (
+                          <span className="text-emerald-600 flex items-center gap-1 font-bold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            Supabase Connected
+                          </span>
+                        ) : (
+                          <span className="text-amber-600 flex items-center gap-1 font-semibold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                            Demo Sandbox
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </motion.form>
                 )}
               </AnimatePresence>

@@ -7,19 +7,20 @@ import {
   ChevronUp, MessageCircle, ArrowRight
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
+import { useCustomizer } from "../context/CustomizerContext";
+import { AdminPanel } from "./AdminPanel";
 
 const navigation = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Services", href: "/services" },
   { name: "Projects", href: "/projects" },
-  { name: "AI Studio", href: "/ai-architect" },
   { name: "FAQ", href: "/faq" },
-  { name: "Testimonials", href: "/testimonials" },
   { name: "Contact", href: "/contact" },
 ];
 
 export function Layout() {
+  const { config } = useCustomizer();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,9 +64,13 @@ export function Layout() {
              <motion.div 
                initial={{ scale: 0.8, opacity: 0 }}
                animate={{ scale: 1, opacity: 1 }}
-               className="text-4xl font-display font-black text-stone-900 tracking-[0.4em] flex items-center gap-4"
+               className="text-3xl font-display font-black text-stone-900 tracking-[0.2em] flex items-center justify-center gap-1.5 uppercase"
              >
-                GRACE <span className="text-gold-gradient">NM</span>
+                {config.logoImage ? (
+                  <img src={config.logoImage} className="h-16 object-contain" alt={config.logoText} />
+                ) : (
+                  <>{config.logoText} <span className="text-gold-gradient font-light">CONSULTANTS</span></>
+                )}
              </motion.div>
              <div className="w-48 h-[1px] bg-stone-100 relative overflow-hidden">
                 <motion.div 
@@ -99,27 +104,31 @@ export function Layout() {
           isScrolled ? "bg-white/90 backdrop-blur-xl border-stone-200/50 shadow-sm h-20" : "bg-transparent border-transparent"
         )}
       >
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="text-2xl font-display font-black tracking-[6px] text-stone-900 group-hover:scale-105 transition-transform duration-500">
-            GRACE <span className="text-gold-gradient">NM</span>
-          </div>
-        </Link>
+         <Link to="/" className="flex items-center gap-3 group">
+          {config.logoImage ? (
+            <img src={config.logoImage} className="h-12 object-contain group-hover:scale-105 transition-transform duration-500" alt={config.logoText} />
+          ) : (
+            <div className="text-xl font-display font-black tracking-[3px] text-stone-900 group-hover:scale-105 transition-transform duration-500 uppercase flex items-center gap-1">
+              {config.logoText} <span className="text-gold-gradient font-light">CONSULTANTS</span>
+            </div>
+          )}
+         </Link>
 
         {/* Desktop Nav */}
         <div className="hidden lg:flex items-center gap-12">
-          <div className="flex gap-10 font-bold text-[10px] uppercase tracking-[3px]">
+          <div className="flex gap-8 font-bold text-xs md:text-[13px] uppercase tracking-[2px]">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
                 className={cn(
                   "transition-all relative py-2 group",
-                  location.pathname === item.href ? "text-gold-500" : "text-stone-400 hover:text-stone-900"
+                  location.pathname === item.href ? "text-gold-500 font-extrabold" : "text-stone-400 hover:text-stone-900"
                 )}
               >
                 {item.name}
                 <span className={cn(
-                  "absolute bottom-0 left-0 h-[1px] bg-gold-500 transition-all duration-300",
+                  "absolute bottom-0 left-0 h-[1.5px] bg-gold-500 transition-all duration-300",
                   location.pathname === item.href ? "w-full" : "w-0 group-hover:w-full"
                 )} />
               </Link>
@@ -127,7 +136,7 @@ export function Layout() {
           </div>
           <Link
             to="/quote"
-            className="btn-gold !py-2.5 !px-6 !text-[9px] !tracking-[3px]"
+            className="btn-gold !py-2.5 !px-6 !text-[11px] !tracking-[2px]"
           >
             REQUEST BRIEF
           </Link>
@@ -207,8 +216,12 @@ export function Layout() {
         <div className="max-w-7xl mx-auto space-y-20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-20">
             <div className="space-y-8">
-               <div className="text-2xl font-display font-black tracking-[4px] text-stone-900">
-                  GRACE <span className="text-gold-500">NM</span>
+               <div className="text-xl font-display font-black tracking-[3px] text-stone-900 uppercase flex items-center gap-1">
+                  {config.logoImage ? (
+                    <img src={config.logoImage} className="h-10 object-contain" alt={config.logoText} />
+                  ) : (
+                    <>{config.logoText} <span className="text-gold-500 font-light">CONSULTANTS</span></>
+                  )}
                </div>
                <p className="text-stone-400 text-sm leading-relaxed max-w-xs">
                   A premier engineering consultancy and construction firm shaping the future of African architecture through innovation and precision.
@@ -258,7 +271,7 @@ export function Layout() {
 
           <div className="pt-12 border-t border-stone-200 flex flex-col md:flex-row items-center justify-between gap-6">
              <p className="text-[10px] text-stone-400 uppercase tracking-widest font-bold">
-                © 2024 GRACE NM Consultant & Construction Company PLC.
+                © 2024 Gracenm Consultants & Construction Company Ltd.
              </p>
              <div className="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-stone-400">
                 <a href="#" className="hover:text-stone-900 transition-colors">Safety</a>
@@ -283,6 +296,9 @@ export function Layout() {
           </motion.button>
         )}
       </AnimatePresence>
+
+      {/* Admin Panel Console */}
+      <AdminPanel />
     </div>
   );
 }

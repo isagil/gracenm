@@ -11,7 +11,7 @@ async function startServer() {
 
   // API routes
   app.get("/api/health", (req, res) => {
-    res.json({ status: "ok", company: "Grace NM Consultant & Construction Company PLC" });
+    res.json({ status: "ok", company: "Gracenm Consultants & Construction Company Ltd" });
   });
 
   // Handle contact form submissions

@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/src/lib/utils";
+import { useCustomizer } from "../context/CustomizerContext";
 
 const stats = [
   { label: "Projects Delivered", value: "100+", icon: Building2 },
@@ -17,6 +18,7 @@ const stats = [
 ];
 
 export function Home() {
+  const { config } = useCustomizer();
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
@@ -33,46 +35,56 @@ export function Home() {
           >
             <div className="pre-title">Engineering Tomorrow</div>
             
-            <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-stone-900">
-               Building Excellence.<br />
-               <span className="text-gold-gradient italic">Delivering</span> Trust.
+            <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-stone-900 whitespace-pre-line">
+               {config.heroTitle}
              </h1>
 
             <p className="max-w-xl text-lg md:text-xl text-stone-400 font-light leading-relaxed">
-              GRACE NM Consultant & Construction Company PLC provides professional construction, engineering, and consultancy services with a commitment to quality, innovation, and client satisfaction.
+              {config.heroSubtitle}
             </p>
 
             <div className="flex flex-wrap gap-5 pt-4">
               <Link to="/quote" className="btn-gold group flex items-center gap-3">
-                Get a Quote <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                {config.heroCtaPrimary} <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link to="/contact" className="btn-outline">
-                Contact Us
+                {config.heroCtaSecondary}
               </Link>
             </div>
 
             <div className="flex flex-wrap gap-10 pt-10 border-t border-stone-100">
                <div className="flex flex-col gap-1">
                  <span className="text-[10px] text-stone-400 uppercase tracking-[2px]">Reach Out</span>
-                 <span className="text-[14px] text-stone-900 font-medium">+256 706 802 370</span>
+                 <span className="text-[14px] text-stone-900 font-medium">{config.heroPhone1}</span>
                </div>
                <div className="flex flex-col gap-1">
                  <span className="text-[10px] text-stone-400 uppercase tracking-[2px]">Inquiries</span>
-                 <span className="text-[14px] text-stone-900 font-medium">+256 762 632 154</span>
+                 <span className="text-[14px] text-stone-900 font-medium">{config.heroPhone2}</span>
                </div>
             </div>
           </motion.div>
 
-          <div className="relative h-full min-h-[500px] flex flex-col justify-center">
+          <div className="relative h-full min-h-[500px] flex items-center justify-center lg:justify-end">
              <div className="absolute top-1/2 left-0 rotate-[-90deg] origin-left text-[10px] tracking-[5px] text-stone-900/5 uppercase whitespace-nowrap hidden xl:block">
-              EST. 2014 — BUILDING THE FUTURE WITH QUALITY & TRUST
+              {config.heroEstSlogan}
+            </div>
+
+            {/* Architectural Hero Image Element */}
+            <div className="absolute inset-0 z-0 opacity-20 lg:opacity-60 rounded-tr-[4rem] rounded-tl-none rounded-b-none overflow-hidden border border-stone-200 shadow-inner">
+              <img 
+                src={config.photos.homeHero} 
+                alt="Grace NM Modern Corporate Construction Uganda" 
+                className="w-full h-full object-cover filter contrast-110 brightness-95 saturate-75 hover:scale-105 transition-transform duration-1000"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-white via-white/80 to-transparent" />
             </div>
 
             <motion.div 
                initial={{ opacity: 0, scale: 0.9 }}
                animate={{ opacity: 1, scale: 1 }}
                transition={{ delay: 0.3, duration: 0.8 }}
-               className="glass p-12 relative z-10 space-y-12 max-w-lg lg:ml-auto w-full group overflow-hidden shadow-2xl"
+               className="glass p-12 relative z-10 space-y-12 max-w-lg lg:ml-auto w-full group overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] bg-white/95 backdrop-blur-md rounded-tr-3xl rounded-tl-none rounded-b-none border border-stone-100"
             >
               <div className="absolute top-0 right-0 w-24 h-24 border-r border-t border-gold-500/20 m-4 group-hover:m-2 transition-all duration-500" />
               <div className="absolute bottom-0 left-0 w-24 h-24 border-l border-b border-gold-500/20 m-4 group-hover:m-2 transition-all duration-500" />
@@ -109,7 +121,7 @@ export function Home() {
             </h2>
             <div className="space-y-6 text-stone-400 text-lg md:text-xl font-light leading-relaxed">
               <p>
-                GRACE NM Consultant & Construction Company PLC is a professional construction and consultancy company dedicated to delivering high-quality building solutions for residential, commercial, and industrial projects.
+                Gracenm Consultants & Construction Company Ltd is a professional construction and consultancy company dedicated to delivering high-quality building solutions for residential, commercial, and industrial projects.
               </p>
               <p>
                 We combine experience, innovation, and modern construction standards to provide durable, efficient, and cost-effective solutions tailored to our clients' needs.
@@ -149,7 +161,7 @@ export function Home() {
              <div className="lg:w-7/12 relative group">
                 <div className="relative aspect-[16/10] overflow-hidden shadow-2xl">
                    <img 
-                      src="/src/assets/images/construction_site_hero_1779222656099.png" 
+                      src={config.photos.homeAbout} 
                       alt="Featured Project" 
                       className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                    />
@@ -208,83 +220,6 @@ export function Home() {
         </div>
       </section>
 
-      {/* Interactive AI Design Portal Preview Block */}
-      <section className="py-24 px-6 md:px-15 bg-stone-50 border-y border-stone-200/60 relative overflow-hidden">
-        <div className="blueprint-bg absolute inset-0 z-0 opacity-15" />
-        <div className="absolute top-1/2 left-1/3 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(212,175,55,0.06)_0%,transparent_70%)] z-0 pointer-events-none" />
-        
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
-          <div className="space-y-8">
-            <div className="pre-title flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
-              <span>Computational Architecture</span>
-            </div>
-            <h2 className="text-4xl md:text-7xl font-display font-bold uppercase tracking-tighter text-stone-900 leading-[1.1]">
-              Simulate Your <span className="text-gold-gradient italic">Dream Space</span> Instantly.
-            </h2>
-            <p className="text-stone-400 text-lg md:text-xl font-light leading-relaxed">
-              Experience our brand-new interactive AI Architectural Tool. Select material profiles, test biophilic vegetation volumes, adjust microclimate structures, and watch real-time photorealistic BIM twin generation before you break ground.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link to="/ai-architect" className="btn-gold flex items-center gap-3">
-                <span>Enter AI Studio</span>
-                <ArrowRight size={16} />
-              </Link>
-              <Link to="/innovation" className="btn-outline">
-                Our Digital Twins
-              </Link>
-            </div>
-          </div>
-
-          <div className="relative group">
-            <div className="absolute -inset-4 bg-gold-500/5 blur-2xl rounded-[3rem] pointer-events-none" />
-            <div className="relative border border-stone-200 bg-white p-8 md:p-12 shadow-2xl space-y-8 overflow-hidden">
-              <div className="absolute top-0 right-0 p-8 text-stone-900/[0.02] font-black text-8xl uppercase tracking-widest pointer-events-none select-none">
-                AI.BIM
-              </div>
-
-              <div className="flex justify-between items-center border-b border-stone-100 pb-6">
-                <div>
-                  <span className="text-[10px] text-stone-400 font-bold uppercase tracking-widest">Active Simulation ID</span>
-                  <span className="text-stone-950 font-mono text-xs font-bold block">G-LAB-EAST-AFRICA_99</span>
-                </div>
-                <span className="px-3 py-1 bg-gold-gradient text-[8px] font-black tracking-widest text-white uppercase rounded-none">
-                  Online & Active
-                </span>
-              </div>
-
-              <div className="aspect-video overflow-hidden border border-stone-100 relative shadow-inner">
-                <img 
-                  src="/src/assets/images/architectural_render_3d_1779222706847.png" 
-                  alt="AI Simulation preview" 
-                  className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1.5s]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/60 to-transparent" />
-                <div className="absolute bottom-6 left-6 text-white space-y-1">
-                  <p className="text-[9px] uppercase tracking-widest font-black text-gold-500">Biophilic Modern Villa</p>
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-white/70">Render Engine: Lovable-BIM-v4</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="space-y-1">
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-stone-400 block">Style</span>
-                  <span className="text-xs font-bold text-stone-900 uppercase">Sustainable</span>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-stone-400 block">Carbon Footprint</span>
-                  <span className="text-xs font-bold text-green-600 uppercase">-45% Est</span>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-[9px] uppercase tracking-widest font-bold text-stone-400 block">Accuracy</span>
-                  <span className="text-xs font-bold text-stone-900 uppercase">92% Match</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Services Scroller Feature */}
       <section className="py-20 md:py-32 bg-white border-y border-stone-100 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 md:px-15 mb-20 flex flex-col md:flex-row md:items-end justify-between gap-10">
@@ -324,11 +259,11 @@ export function Home() {
         <div className="max-w-4xl mx-auto space-y-12">
           <Quote className="w-16 h-16 text-gold-500/10 mx-auto" />
           <h2 className="text-3xl md:text-5xl font-display font-medium text-stone-900 leading-tight italic">
-            "Our mission is to build structures that inspire confidence, create value, and contribute to community development."
+            "Our mission is to transform our clients' visions into reality by delivering high-quality, safe, innovative, and cost-effective construction solutions."
           </h2>
           <div className="flex flex-col items-center gap-2">
             <div className="w-12 h-[1px] bg-gold-500" />
-            <span className="text-[10px] uppercase tracking-[3px] text-stone-400 font-bold">The GRACE NM Vision</span>
+            <span className="text-[10px] uppercase tracking-[3px] text-stone-400 font-bold">The Gracenm Vision</span>
           </div>
         </div>
       </section>
@@ -341,7 +276,7 @@ export function Home() {
           <div className="relative z-10 space-y-8">
             <h2 className="text-4xl md:text-7xl font-display font-bold uppercase text-stone-900 tracking-tighter leading-none">Let's Build Your <span className="text-gold-gradient italic">Vision.</span></h2>
             <p className="max-w-xl mx-auto text-stone-400 text-lg md:text-xl font-light leading-relaxed">
-              Ready to transform your architectural dreams into engineering reality? Start your premier construction journey with Grace NM today.
+              Ready to transform your architectural dreams into engineering reality? Start your premier construction journey with Gracenm Consultants & Construction Company Ltd today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
               <Link

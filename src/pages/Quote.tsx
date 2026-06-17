@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Send, ArrowRight, ArrowLeft, CheckCircle2, 
   MapPin, Phone, Mail, Building2, User,
-  FileText, Calendar, MessageSquare, ShieldCheck
+  FileText, Calendar, MessageSquare, ShieldCheck, AlertCircle
 } from "lucide-react";
+import { getSupabase } from "../lib/supabase";
 
 type Step = 1 | 2 | 3;
 
@@ -23,6 +24,10 @@ const cn = (...inputs: any[]) => inputs.filter(Boolean).join(" ");
 
 export function Quote() {
   const [step, setStep] = useState<Step>(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [supabaseConfigured, setSupabaseConfigured] = useState(false);
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,6 +41,11 @@ export function Quote() {
   });
   const [submitted, setSubmitted] = useState(false);
 
+  useEffect(() => {
+    const sb = getSupabase();
+    setSupabaseConfigured(!!sb);
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -43,9 +53,41 @@ export function Quote() {
   const nextStep = () => setStep(prev => (prev + 1) as Step);
   const prevStep = () => setStep(prev => (prev - 1) as Step);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    const sb = getSupabase();
+    if (sb) {
+      try {
+        const { error } = await sb
+          .from("quote_requests")
+          .insert([formData]);
+
+        if (error) {
+          console.error("Supabase Bid Insertion Error:", error);
+          const detail = error.message?.includes("schema cache") || error.message?.includes("does not exist")
+            ? " Please execute the SQL schemas defined in 'supabase_schema.sql' in your Supabase SQL editor."
+            : "";
+          setErrorMessage(`Database rejected request: ${error.message}.${detail}`);
+        } else {
+          setSubmitted(true);
+        }
+      } catch (err: any) {
+        console.error("Transmission error:", err);
+        setErrorMessage(err?.message || "A secure connection could not be established with Supabase.");
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      // Offline / Local sandbox prototype simulator mode
+      console.log("No Supabase credential configurations defined. Transitioning local demo simulation:", formData);
+      setTimeout(() => {
+        setSubmitted(true);
+        setIsSubmitting(false);
+      }, 1200);
+    }
   };
 
   if (submitted) {
@@ -290,19 +332,45 @@ export function Quote() {
                     </div>
                   </div>
 
-                  <div className="flex gap-4">
-                    <button 
-                      type="button" onClick={prevStep}
-                      className="btn-outline !w-auto flex-1 flex items-center justify-center gap-3 text-stone-900"
-                    >
-                      <ArrowLeft size={18} /> Back
-                    </button>
-                    <button 
-                      type="submit" 
-                      className="btn-gold !w-auto flex-[2] flex items-center justify-center gap-3"
-                    >
-                      Submit Proposal <Send size={18} />
-                    </button>
+                  {errorMessage && (
+                    <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-3 font-semibold leading-relaxed">
+                      <AlertCircle size={16} className="shrink-0" />
+                      <span>{errorMessage}</span>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-3">
+                    <div className="flex gap-4">
+                      <button 
+                        type="button" onClick={prevStep}
+                        disabled={isSubmitting}
+                        className="btn-outline !w-auto flex-1 flex items-center justify-center gap-3 text-stone-900 disabled:opacity-50"
+                      >
+                        <ArrowLeft size={18} /> Back
+                      </button>
+                      <button 
+                        type="submit" 
+                        disabled={isSubmitting}
+                        className="btn-gold !w-auto flex-[2] flex items-center justify-center gap-3 disabled:opacity-50"
+                      >
+                        {isSubmitting ? "Submitting..." : <>Submit Proposal <Send size={18} /></>}
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[9px] uppercase tracking-widest font-black text-stone-400 px-1 pt-1">
+                      <span>Transmission protocol:</span>
+                      {supabaseConfigured ? (
+                        <span className="text-emerald-600 flex items-center gap-1 font-bold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          Supabase Synced
+                        </span>
+                      ) : (
+                        <span className="text-amber-600 flex items-center gap-1 font-semibold">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                          Sandbox Environment
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               )}

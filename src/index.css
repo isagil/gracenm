@@ -2,12 +2,12 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "Poppins", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", "Montserrat", sans-serif;
-  --font-body: "Poppins", "Inter", sans-serif;
+  --font-sans: var(--font-body, "Poppins", "Inter", ui-sans-serif, system-ui, sans-serif);
+  --font-display: var(--font-display, "Space Grotesk", "Montserrat", sans-serif);
+  --font-body: var(--font-body, "Poppins", "Inter", sans-serif);
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --color-gold-500: #9B872D;
+  --color-gold-500: var(--theme-primary, #C5A028);
   --color-space-black: #FFFFFF;
   --color-charcoal: #F8F7F2;
   --color-graphite: #EFECE5;
@@ -46,26 +46,39 @@
 
   .glass {
     @apply bg-white/70 backdrop-blur-2xl border border-stone-200/50 shadow-2xl;
+    border-radius: var(--card-radius, 1.5rem);
   }
 
   .friendly-card {
-    @apply bg-white border border-stone-100 shadow-xl shadow-stone-200/20 p-8 md:p-12 transition-all duration-700 hover:shadow-2xl hover:shadow-gold-500/10 hover:-translate-y-1;
+    @apply bg-white border border-stone-100 shadow-xl shadow-stone-200/20 p-8 md:p-12 transition-all duration-700 hover:shadow-2xl hover:-translate-y-1;
+    border-radius: var(--friendly-card-radius, 0px);
+  }
+  .friendly-card:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.04), 0 0 20px -3px var(--theme-primary, #C5A028);
   }
 
   .text-gold-gradient {
-    @apply bg-clip-text text-transparent bg-linear-to-br from-[#D4AF37] via-[#C5A028] to-[#996515];
+    background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to bottom right, var(--theme-gradient-start, #D4AF37), var(--theme-gradient-middle, #C5A028), var(--theme-gradient-end, #996515));
   }
 
   .bg-gold-gradient {
-    @apply bg-linear-to-br from-[#D4AF37] via-[#C5A028] to-[#996515];
+    background-image: linear-gradient(to bottom right, var(--theme-gradient-start, #D4AF37), var(--theme-gradient-middle, #C5A028), var(--theme-gradient-end, #996515));
   }
 
   .btn-gold {
-    @apply bg-linear-to-br from-[#D4AF37] via-[#C5A028] to-[#996515] text-white px-10 py-5 text-[11px] font-black uppercase tracking-[3px] rounded-full cursor-pointer hover:opacity-95 transition-all hover:scale-[1.05] active:scale-95 shadow-[0_20px_50px_rgba(155,135,45,0.3)];
+    background-image: linear-gradient(to bottom right, var(--theme-gradient-start, #D4AF37), var(--theme-gradient-middle, #C5A028), var(--theme-gradient-end, #996515));
+    @apply text-white px-10 py-5 text-[11px] font-black uppercase tracking-[3px] cursor-pointer hover:opacity-95 transition-all hover:scale-[1.05] active:scale-95 shadow-[0_20px_50px_rgba(155,135,45,0.2)];
+    border-radius: var(--btn-radius-tr, 1.5rem) var(--btn-radius-tl, 0px) var(--btn-radius-br, 0px) var(--btn-radius-bl, 0px);
   }
 
   .btn-outline {
-    @apply border-2 border-stone-200 text-stone-900 px-10 py-5 text-[11px] font-black uppercase tracking-[3px] rounded-full bg-white hover:bg-stone-50 transition-all hover:border-gold-500/50 shadow-sm hover:shadow-lg;
+    @apply border-2 border-stone-200 text-stone-900 px-10 py-5 text-[11px] font-black uppercase tracking-[3px] bg-white hover:bg-stone-50 transition-all shadow-sm hover:shadow-lg;
+    border-radius: var(--btn-radius-tr, 1.5rem) var(--btn-radius-tl, 0px) var(--btn-radius-br, 0px) var(--btn-radius-bl, 0px);
+  }
+  .btn-outline:hover {
+    border-color: var(--theme-primary, #C5A028);
   }
 
   .pre-title {

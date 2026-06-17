@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { getSupabase } from "../lib/supabase";
 import { 
   Building2, HardHat, Ruler, Map, 
   ArrowUpRight, Search, X, Maximize2,
@@ -77,8 +78,57 @@ export function Projects() {
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const [projectsList, setProjectsList] = useState<typeof projects>(projects);
+  const [loading, setLoading] = useState(false);
+  const [supabaseConfigured, setSupabaseConfigured] = useState(false);
+  const [tableMissing, setTableMissing] = useState(false);
 
-  const filteredProjects = projects.filter(project => {
+  useEffect(() => {
+    async function fetchSupabaseProjects() {
+      const sb = getSupabase();
+      if (!sb) return;
+      setSupabaseConfigured(true);
+
+      try {
+        setLoading(true);
+        const { data, error } = await sb
+          .from("projects")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Supabase error fetching projects:", error.message);
+          if (error.message?.includes("does not exist") || error.message?.includes("schema cache") || error.code === "PGRST116") {
+            setTableMissing(true);
+          }
+          return;
+        }
+
+        if (data && data.length > 0) {
+          // Map database structure to React UI structure
+          const mapped = data.map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            category: item.category as ProjectCategory,
+            location: item.location,
+            year: item.year || "2024",
+            image: item.image_url || "/src/assets/images/blueprint_draft_table_1779226245180.png",
+            description: item.description,
+            stats: item.stats || { area: "Varies", status: "Active" }
+          }));
+          setProjectsList(mapped);
+        }
+      } catch (err) {
+        console.error("Unexpected error loading database projects:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSupabaseProjects();
+  }, []);
+
+  const filteredProjects = projectsList.filter(project => {
     const matchesCategory = activeCategory === "All" || project.category === activeCategory;
     const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           project.location.toLowerCase().includes(searchQuery.toLowerCase());
@@ -86,22 +136,60 @@ export function Projects() {
   });
 
   return (
-    <div className="pt-32 pb-24 overflow-hidden bg-white min-h-screen">
+    <div className="overflow-hidden bg-white min-h-screen">
       {/* Header */}
-      <section className="px-6 md:px-15 mb-20">
-        <div className="max-w-7xl mx-auto space-y-6">
-           <div className="pre-title">Our Portfolio</div>
-           <h1 className="text-5xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-stone-900">
+      <section className="relative min-h-[50vh] flex items-center pt-32 pb-20 bg-stone-950 text-white overflow-hidden mb-20">
+        {/* Background Image / Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/src/assets/images/blueprint_draft_table_1779226245180.png" 
+            alt="Engineering Blueprint Table" 
+            className="w-full h-full object-cover opacity-20 filter grayscale contrast-125 brightness-50"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/80 to-transparent" />
+          <div className="blueprint-bg absolute inset-0 opacity-15" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-15 relative z-10 w-full space-y-6">
+           <div className="pre-title text-gold-500 border-gold-500/30">Our Portfolio</div>
+           <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-white max-w-4xl">
              Engineering <span className="text-gold-gradient">Impact.</span>
            </h1>
-           <p className="max-w-2xl text-stone-400 text-xl font-light leading-relaxed">
+           <p className="max-w-2xl text-stone-300 text-lg md:text-xl font-light leading-relaxed">
              Go beyond the blueprint. Explore our collection of high-precision projects that are redefining standard construction in Uganda and beyond.
            </p>
         </div>
+        <div className="absolute bottom-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
       </section>
 
       {/* Filters Bar */}
       <section className="px-6 md:px-15 mb-16">
+        {/* Supabase Status Notifier */}
+        {supabaseConfigured && (
+          <div className="max-w-7xl mx-auto mb-8 px-4 py-3 border border-stone-200/50 bg-stone-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest font-black text-stone-400">
+              <span>Portfolio Database:</span>
+              {tableMissing ? (
+                <span className="text-amber-600 flex items-center gap-1 font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  Pending Table Setup
+                </span>
+              ) : (
+                <span className="text-emerald-600 flex items-center gap-1 font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Fully Synchronized (Supabase Connected)
+                </span>
+              )}
+            </div>
+
+            {tableMissing && (
+              <p className="text-[11px] text-stone-400 leading-normal font-light">
+                Tip: The <code className="text-amber-600 font-mono font-bold bg-amber-50 px-1 border border-amber-100 rounded">projects</code> table was not detected. Apply the commands from <code className="text-stone-600 font-mono font-bold bg-stone-100 px-1 border border-stone-200 rounded">supabase_schema.sql</code> in your Supabase SQL console. Local assets are displayed as fallback.
+              </p>
+            )}
+          </div>
+        )}
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between border-b border-stone-100 pb-8">
            <div className="flex flex-wrap gap-2">
               {categories.map(cat => (

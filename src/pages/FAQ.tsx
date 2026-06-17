@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const faqs = [
   {
-    question: "What services does GRACE NM provide?",
+    question: "What services does Gracenm Consultants & Construction Company Ltd provide?",
     answer: "We offer a full range of construction services, including building construction (residential, commercial, industrial), architectural design, engineering consultancy, quantity surveying, project supervision, renovation, and site planning."
   },
   {
@@ -21,8 +21,8 @@ const faqs = [
     answer: "Yes, we handle everything from small-scale residential renovations to large-scale commercial and industrial developments with the same level of precision and quality."
   },
   {
-    question: "Is GRACE NM a registered company?",
-    answer: "Yes, we are a legally registered Public Limited Company (PLC) in Uganda, fully compliant with national engineering and construction regulations."
+    question: "Is Gracenm Consultants & Construction Company Ltd a registered company?",
+    answer: "Yes, we are a legally registered Limited Liability Company (Ltd) in Uganda, fully compliant with national engineering and construction regulations."
   },
   {
     question: "Can you help with architectural designs for my land?",
@@ -51,7 +51,7 @@ export function FAQ() {
              General <span className="text-gold-gradient italic">Inquiries.</span>
            </h1>
            <p className="text-stone-400 text-xl font-light leading-relaxed">
-             Everything you need to know about partnering with GRACE NM for your next engineering milestone.
+             Everything you need to know about partnering with Gracenm Consultants & Construction Company Ltd for your next engineering milestone.
            </p>
         </div>
       </section>

@@ -2,10 +2,12 @@ import { motion } from "motion/react";
 import { 
   Building2, Ruler, HardHat, RefreshCcw, 
   Search, ShieldCheck, Zap, ArrowRight,
-  Target, Rocket, Microscope, ArrowUpRight,
-  Palette, Calculator, Map, CheckCircle2
+  Target, Rocket, Microscope,
+  Palette, Calculator, Map, CheckCircle2,
+  Quote, Star, User, Building
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCustomizer } from "../context/CustomizerContext";
 
 const mainServices = [
   {
@@ -66,20 +68,65 @@ const mainServices = [
   }
 ];
 
+const testimonials = [
+  {
+    name: "John Musisi",
+    role: "Property Developer",
+    text: "Grace NM delivered our residential complex well ahead of schedule without compromising on the high standards we expected. Their engineering precision is unmatched.",
+    stars: 5,
+    company: "Musisi Estates Ltd"
+  },
+  {
+    name: "Sarah Akello",
+    role: "Business Owner",
+    text: "The architectural designs provided by their team were not only creative but also highly functional for our new office space. Truly a professional partner.",
+    stars: 5,
+    company: "Innovate Hub Uganda"
+  },
+  {
+    name: "Eng. Robert Katende",
+    role: "Lead Consultant",
+    text: "As an engineer myself, I was impressed by their structural analysis and technical consultancy. They understand modern construction standards deeply.",
+    stars: 5,
+    company: "Katende Associates"
+  },
+  {
+    name: "Martha Namono",
+    role: "Homeowner",
+    text: "Their finishing services transformed my old house into a modern home. The tiling and interior painting were perfect. Highly recommended!",
+    stars: 5,
+    company: "Private Residence"
+  }
+];
+
 export function Services() {
+  const { config } = useCustomizer();
   return (
-    <div className="pt-32 pb-24 overflow-hidden bg-white">
+    <div className="overflow-hidden bg-white">
       {/* Hero */}
-      <section className="px-6 md:px-15 mb-16 md:mb-32 relative">
-        <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
-           <div className="pre-title">Our Solutions</div>
-          <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase max-w-4xl text-stone-900">
-            Precision <span className="text-gold-gradient italic">Engineering</span> For A Modern World.
-          </h1>
-          <p className="max-w-3xl text-lg md:text-xl text-stone-400 font-light leading-relaxed">
-            From deep-earth foundations to the highest spires, GRACE NM provides a full spectrum of construction and consultancy services defined by quality and technological leadership.
-          </p>
+      <section className="relative min-h-[50vh] flex items-center pt-32 pb-20 bg-stone-950 text-white overflow-hidden mb-20">
+        {/* Background Image / Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={config.photos.servicesTop} 
+            alt="Construction Site Hero" 
+            className="w-full h-full object-cover opacity-20 filter grayscale contrast-125 brightness-50"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/80 to-transparent" />
+          <div className="blueprint-bg absolute inset-0 opacity-15" />
         </div>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-15 relative z-10 w-full space-y-6">
+           <div className="pre-title text-gold-500 border-gold-500/30">Our Solutions</div>
+           <h1 className="text-4xl md:text-8xl font-display font-bold leading-[1.05] tracking-tighter uppercase text-white max-w-4xl">
+             Precision <span className="text-gold-gradient italic">Engineering</span> For A Modern World.
+           </h1>
+           <p className="max-w-3xl text-stone-300 text-lg md:text-xl font-light leading-relaxed">
+             From deep-earth foundations to the highest spires, Gracenm Consultants & Construction Company Ltd provides a full spectrum of construction and consultancy services defined by quality and technological leadership.
+           </p>
+        </div>
+        <div className="absolute bottom-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
       </section>
 
       {/* Services Grid */}
@@ -110,10 +157,10 @@ export function Services() {
                  
                  <div className="grid grid-cols-2 gap-4 pt-10 border-t border-stone-100">
                     {service.features.map(f => (
-                      <div key={f} className="flex items-center gap-2 text-stone-400 hover:text-stone-600 transition-colors">
-                        <CheckCircle2 size={14} className="text-gold-500" />
-                        <span className="text-[10px] uppercase tracking-widest font-bold">{f}</span>
-                      </div>
+                       <div key={f} className="flex items-center gap-2 text-stone-400 hover:text-stone-600 transition-colors">
+                         <CheckCircle2 size={14} className="text-gold-500" />
+                         <span className="text-[10px] uppercase tracking-widest font-bold">{f}</span>
+                       </div>
                     ))}
                  </div>
                </div>
@@ -158,10 +205,10 @@ export function Services() {
               </div>
             </div>
 
-            <div className="lg:w-1/2 relative">
+             <div className="lg:w-1/2 relative">
                <div className="relative aspect-square md:aspect-auto md:h-[800px] overflow-hidden shadow-2xl">
                   <img 
-                    src="/src/assets/images/architectural_render_3d_1779222706847.png" 
+                    src={config.photos.servicesBottom} 
                     alt="Process Render" 
                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
                   />
@@ -177,37 +224,98 @@ export function Services() {
         </div>
       </section>
 
+      {/* Client Voices / Testimonials (Moved from standalone page) */}
+      <section className="py-32 px-6 md:px-15 border-t border-stone-100 bg-stone-50/50">
+        <div className="max-w-7xl mx-auto space-y-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-end">
+            <div className="space-y-6">
+              <div className="pre-title">Client Voices</div>
+              <h2 className="text-4xl md:text-6xl font-display font-bold uppercase tracking-tighter text-stone-900 leading-none">
+                Built On <span className="text-gold-gradient italic">Trust.</span>
+              </h2>
+            </div>
+            <p className="text-stone-400 text-lg font-light leading-relaxed">
+              Our greatest structural achievement isn't the concrete we pour, but the long-lasting relationships we build with our visionary partners in Uganda.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {config.testimonials.map((t, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="friendly-card group relative overflow-hidden flex flex-col justify-between bg-white/80"
+              >
+                <Quote className="absolute top-10 right-10 text-stone-900/[0.03] w-24 h-24 pointer-events-none" />
+                
+                <div className="space-y-6">
+                  <div className="flex gap-1 text-gold-500">
+                     {[...Array(t.stars)].map((_, i) => (
+                       <Star key={i} size={14} fill="currentColor" />
+                     ))}
+                  </div>
+
+                  <p className="text-stone-900 text-lg md:text-xl font-light leading-relaxed italic relative z-10">
+                     "{t.text}"
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4 pt-6 border-t border-stone-100 relative z-10 mt-8">
+                   <div className="w-12 h-12 bg-stone-50 border border-stone-100 flex items-center justify-center text-gold-500 group-hover:bg-gold-500 group-hover:text-white transition-all">
+                      <User size={24} />
+                   </div>
+                   <div className="space-y-0.5">
+                      <h4 className="text-sm font-display font-bold uppercase text-stone-900 tracking-tight">{t.name}</h4>
+                      <div className="flex flex-col text-[8px] uppercase tracking-widest font-bold text-stone-400">
+                         <span>{t.role}</span>
+                         <span className="text-gold-500 flex items-center gap-1 mt-0.5">
+                           <Building size={10} /> {t.company}
+                         </span>
+                      </div>
+                   </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Why Choose Us */}
       <section className="py-32 bg-stone-50 border-y border-stone-100 px-6 md:px-15 relative overflow-hidden">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
            <div className="space-y-12">
               <div className="pre-title">The Advantage</div>
-              <h2 className="text-4xl md:text-7xl font-display font-bold uppercase tracking-tighter text-stone-900 leading-none">
-                Why Clients <span className="text-gold-gradient italic">Trust</span> GRACE NM.
+              <h2 className="text-4xl md:text-6xl font-display font-bold uppercase tracking-tighter text-stone-900 leading-none">
+                Why Clients <span className="text-gold-gradient italic">Trust Us</span>
               </h2>
-              <p className="text-stone-400 text-xl font-light leading-relaxed">
-                Our reputation is built on a decade of unwavering commitment to excellence and a customer-focused approach that puts your vision first.
+              <p className="text-stone-400 text-lg font-light leading-relaxed">
+                At Gracenm Consultants & Construction Company Ltd, trust is the foundation of every project we undertake. Our clients choose us because we are committed to honesty, professionalism, and delivering results that exceed expectations.
               </p>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-8">
+              <div className="space-y-6 pt-4">
                  {[
-                   "Experienced Professionals",
-                   "High-Quality Workmanship",
-                   "Timely Project Delivery",
-                   "Transparent Pricing",
-                   "Customer-Focused",
-                   "Modern Techniques"
+                   { title: "Honesty & Integrity", text: "We conduct business with transparency, fairness, and accountability, ensuring our clients are informed at every stage of the project." },
+                   { title: "Punctuality & Reliability", text: "We respect our clients' time and investment by delivering projects on schedule and within agreed budgets." },
+                   { title: "Effective Communication", text: "We maintain open and consistent communication, keeping clients updated and involved throughout the construction process." },
+                   { title: "Quality Workmanship", text: "We take pride in delivering durable, luxurious, and high-quality structures built to the highest standards." },
+                   { title: "Customer Satisfaction", text: "Our goal is to bring our clients' visions to life while providing a smooth, stress-free construction experience." }
                  ].map((point, i) => (
-                   <motion.div 
-                    key={point} 
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="flex items-center gap-4 border-b border-stone-100 pb-4"
-                   >
-                      <ShieldCheck size={20} className="text-gold-500" />
-                      <span className="text-[12px] uppercase tracking-widest font-bold text-stone-600">{point}</span>
-                   </motion.div>
+                    <motion.div 
+                     key={point.title} 
+                     initial={{ opacity: 0, y: 10 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     transition={{ delay: i * 0.05 }}
+                     className="flex gap-4 border-b border-stone-100 pb-5"
+                    >
+                       <ShieldCheck size={20} className="text-gold-500 shrink-0 mt-1" />
+                       <div className="space-y-2">
+                          <h4 className="text-sm uppercase font-black tracking-widest text-stone-900">{point.title}</h4>
+                          <p className="text-xs text-stone-400 font-light leading-relaxed">{point.text}</p>
+                       </div>
+                    </motion.div>
                  ))}
               </div>
            </div>
