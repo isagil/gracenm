@@ -97,7 +97,7 @@ export function Projects() {
           .order("created_at", { ascending: false });
 
         if (error) {
-          console.error("Supabase error fetching projects:", error.message);
+          console.warn("Could not fetch projects from Supabase database (using default local list instead):", error.message);
           if (error.message?.includes("does not exist") || error.message?.includes("schema cache") || error.code === "PGRST116") {
             setTableMissing(true);
           }
@@ -119,7 +119,7 @@ export function Projects() {
           setProjectsList(mapped);
         }
       } catch (err) {
-        console.error("Unexpected error loading database projects:", err);
+        console.warn("Unexpected error loading database projects (displaying local assets):", err);
       } finally {
         setLoading(false);
       }

@@ -57,7 +57,7 @@ export function About() {
             .order("display_order", { ascending: true });
 
           if (error) {
-            console.error("Error loading team members from Supabase:", error.message);
+            console.warn("Could not fetch team members from Supabase (using custom AdminPanel/Context fallback):", error.message);
             if (error.message?.includes("does not exist") || error.message?.includes("schema cache") || error.code === "PGRST116") {
               setTableMissing(true);
             }
@@ -74,7 +74,7 @@ export function About() {
             })));
           }
         } catch (e) {
-          console.error("Unexpected error loading team members:", e);
+          console.warn("Unexpected status reading team members (falling back to context configurations):", e);
         }
       }
     }

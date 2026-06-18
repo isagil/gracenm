@@ -184,7 +184,7 @@ export function CustomizerProvider({ children }: { children: React.ReactNode }) 
           }));
         }
       } catch (err) {
-        console.error("Failed to load settings from Supabase", err);
+        console.warn("Failed to load settings from Supabase (using safe local localStorage fallback):", err);
       }
     };
 
@@ -209,7 +209,7 @@ export function CustomizerProvider({ children }: { children: React.ReactNode }) 
             updated_at: new Date().toISOString() 
           });
       } catch (err) {
-        console.error("Failed to sync branding customization to Supabase database", err);
+        console.warn("Failed to sync branding customization to Supabase database (saved locally in browser):", err);
       }
     }, 1000); // 1s debounce to avoid excessive database hitting during typing slider color inputs!
 
