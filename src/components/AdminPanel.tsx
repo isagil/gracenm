@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useCustomizer, Testimonial, CustomizerConfig } from "../context/CustomizerContext";
+import { getSupabase } from "../lib/supabase";
 import { 
   X, Settings, Paintbrush, FileText, Image, MessageSquare, 
   RotateCcw, Sliders, Check, Plus, Trash2, Edit3, 
-  ChevronRight, Sparkles, BookOpen, Layers, Upload, Users
+  ChevronRight, Sparkles, BookOpen, Layers, Upload, Users,
+  Database
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -82,8 +84,52 @@ export function AdminPanel() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const [activeTab, setActiveTab] = useState<"style" | "text" | "photos" | "testimonials" | "team">("style");
+  const [activeTab, setActiveTab] = useState<"style" | "text" | "photos" | "testimonials" | "team" | "database">("style");
   
+  // Database detection states
+  const [dbChecked, setDbChecked] = useState(false);
+  const [sbConfigured, setSbConfigured] = useState(false);
+  const [teamTableExists, setTeamTableExists] = useState(false);
+  const [settingsTableExists, setSettingsTableExists] = useState(false);
+  const [projectsTableExists, setProjectsTableExists] = useState(false);
+  const [sqlCopied, setSqlCopied] = useState(false);
+
+  React.useEffect(() => {
+    const checkDatabase = async () => {
+      const sb = getSupabase();
+      if (!sb) {
+        setSbConfigured(false);
+        setDbChecked(true);
+        return;
+      }
+      setSbConfigured(true);
+      
+      try {
+        const { error: teamErr } = await sb.from("team_members").select("id").limit(1);
+        setTeamTableExists(!teamErr || (!teamErr.message?.includes("does not exist") && !teamErr.message?.includes("schema cache") && teamErr.code !== "PGRST116"));
+      } catch (e) {
+        setTeamTableExists(false);
+      }
+
+      try {
+        const { error: settingsErr } = await sb.from("site_settings").select("id").limit(1);
+        setSettingsTableExists(!settingsErr || (!settingsErr.message?.includes("does not exist") && !settingsErr.message?.includes("schema cache") && settingsErr.code !== "PGRST116"));
+      } catch (e) {
+        setSettingsTableExists(false);
+      }
+
+      try {
+        const { error: projectsErr } = await sb.from("projects").select("id").limit(1);
+        setProjectsTableExists(!projectsErr || (!projectsErr.message?.includes("does not exist") && !projectsErr.message?.includes("schema cache") && projectsErr.code !== "PGRST116"));
+      } catch (e) {
+        setProjectsTableExists(false);
+      }
+
+      setDbChecked(true);
+    };
+    checkDatabase();
+  }, [activeTab]);
+
   // Testimonial local adding states
   const [newTCheck, setNewTCheck] = useState(false);
   const [newTName, setNewTName] = useState("");
@@ -344,6 +390,13 @@ export function AdminPanel() {
           >
             <Users className="w-4 h-4" />
             <span>Team Members</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab("database")}
+            className={`flex-1 py-4 text-[10px] uppercase tracking-widest font-black flex flex-col items-center gap-1.5 border-b-2 transition-all ${activeTab === 'database' ? 'border-stone-900 text-stone-900 bg-white' : 'border-transparent text-stone-400 hover:text-stone-700'}`}
+          >
+            <Database className="w-4 h-4" />
+            <span>Database SQL</span>
           </button>
         </div>
 
@@ -903,6 +956,233 @@ export function AdminPanel() {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: Database Setup & SQL Migrations */}
+          {activeTab === "database" && (
+            <div className="space-y-6">
+              <div className="bg-stone-50 p-4 border border-stone-200/50 rounded-xs">
+                <p className="text-[10px] uppercase font-bold text-stone-700 tracking-wide">database integration center</p>
+                <p className="text-[11px] text-stone-500 leading-relaxed mt-1 font-light block">
+                  This application uses Supabase for offline-resilient engineering backend structures including contact forms, requests for quote bids, dynamic project portfolios, and your customized team board.
+                </p>
+              </div>
+
+              {/* Server connection status widget */}
+              <div className="p-5 border border-stone-200 bg-white rounded-xs space-y-4">
+                <h4 className="text-[10px] uppercase tracking-wider font-extrabold text-stone-900 border-b border-stone-100 pb-2">
+                  SUPABASE CONNECTION STATUS
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`w-2.5 h-2.5 rounded-full ${sbConfigured ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                    <div className="space-y-0.5">
+                      <p className="text-xs font-bold text-stone-800">Connection Linkage</p>
+                      <p className="text-[10px] text-stone-400 font-mono">
+                        {sbConfigured ? 'Supabase Client Initialized' : 'Missing VITE_SUPABASE_URL'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2.5">
+                    <div className={`w-2.5 h-2.5 rounded-full ${dbChecked ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                    <div className="space-y-0.5">
+                      <p className="text-xs font-bold text-stone-800">Diagnostics Check</p>
+                      <p className="text-[10px] text-stone-400">
+                        {dbChecked ? 'Active check completed' : 'Analyzing database connectivity...'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {sbConfigured && (
+                  <div className="pt-2 border-t border-stone-100 space-y-3">
+                    <p className="text-[9px] uppercase tracking-wider text-stone-500 font-bold">Schema Table Verification</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                      {/* Team Members */}
+                      <div className={`p-2.5 border rounded-xs flex items-center justify-between ${teamTableExists ? 'border-emerald-200 bg-emerald-50/20' : 'border-rose-150 bg-rose-50/10'}`}>
+                        <div className="space-y-0.5">
+                          <p className="text-[10px] font-bold text-stone-800 font-mono">team_members</p>
+                          <p className="text-[8px] text-stone-400 uppercase font-light">Team Executive Profiles</p>
+                        </div>
+                        <span className={`text-[9px] font-bold ${teamTableExists ? 'text-emerald-700' : 'text-rose-600'}`}>
+                          {teamTableExists ? '● READY' : '● MISSING'}
+                        </span>
+                      </div>
+
+                      {/* Site Settings */}
+                      <div className={`p-2.5 border rounded-xs flex items-center justify-between ${settingsTableExists ? 'border-emerald-200 bg-emerald-50/20' : 'border-rose-150 bg-rose-50/10'}`}>
+                        <div className="space-y-0.5">
+                          <p className="text-[10px] font-bold text-stone-800 font-mono">site_settings</p>
+                          <p className="text-[8px] text-stone-400 uppercase font-light">Branding & Layouts</p>
+                        </div>
+                        <span className={`text-[9px] font-bold ${settingsTableExists ? 'text-emerald-700' : 'text-rose-600'}`}>
+                          {settingsTableExists ? '● READY' : '● MISSING'}
+                        </span>
+                      </div>
+
+                      {/* Projects */}
+                      <div className={`p-2.5 border rounded-xs flex items-center justify-between ${projectsTableExists ? 'border-emerald-200 bg-emerald-50/20' : 'border-rose-150 bg-rose-50/10'}`}>
+                        <div className="space-y-0.5">
+                          <p className="text-[10px] font-bold text-stone-800 font-mono">projects</p>
+                          <p className="text-[8px] text-stone-400 uppercase font-light">Delivered Works</p>
+                        </div>
+                        <span className={`text-[9px] font-bold ${projectsTableExists ? 'text-emerald-700' : 'text-rose-600'}`}>
+                          {projectsTableExists ? '● READY' : '● MISSING'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Guides */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-1.5 font-bold">
+                  <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full" />
+                  <p className="text-[10px] uppercase font-bold tracking-wider text-stone-800">
+                    How to update your Supabase Database manually:
+                  </p>
+                </div>
+                
+                <ol className="text-[11px] text-stone-500 list-decimal pl-4 space-y-2 leading-relaxed font-light block">
+                  <li>Log in to your <strong className="font-bold">Supabase Dashboard</strong> at <a href="https://supabase.com" target="_blank" rel="noreferrer" className="text-stone-900 underline font-semibold">supabase.com</a>.</li>
+                  <li>Go to your project, and open the <strong className="font-bold">SQL Editor</strong> tab from the left sidebar.</li>
+                  <li>Click <strong className="font-bold">New Query</strong> to create a fresh script canvas.</li>
+                  <li>Copy either the Team Members table SQL or the full database SQL below.</li>
+                  <li>Paste the script block and click <strong className="font-bold">Run</strong> at the bottom right.</li>
+                  <li>Refresh this App page — your team profile photos, biographies, and settings will sync instantly!</li>
+                </ol>
+              </div>
+
+              {/* Copy SQL Panels */}
+              <div className="space-y-4 pt-2">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={() => {
+                      const sqlText = `-- Table: public.team_members\n` +
+                        `CREATE TABLE IF NOT EXISTS public.team_members (\n` +
+                        `    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n` +
+                        `    name VARCHAR(255) NOT NULL,\n` +
+                        `    role VARCHAR(150) NOT NULL,\n` +
+                        `    image_url TEXT NOT NULL,\n` +
+                        `    description TEXT NOT NULL,\n` +
+                        `    display_order INT DEFAULT 0,\n` +
+                        `    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL\n` +
+                        `);\n\n` +
+                        `-- Enable RLS\n` +
+                        `ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;\n\n` +
+                        `-- Create public Read policy\n` +
+                        `CREATE POLICY "Allow public read access to team members"\n` +
+                        `ON public.team_members FOR SELECT USING (true);\n\n` +
+                        `-- Create public write policy (Admin settings management)\n` +
+                        `DROP POLICY IF EXISTS "Allow public updates to team members" ON public.team_members;\n` +
+                        `CREATE POLICY "Allow public updates to team members"\n` +
+                        `ON public.team_members FOR ALL USING (true) WITH CHECK (true);\n\n` +
+                        `-- Insert Default Team Members\n` +
+                        `INSERT INTO public.team_members (name, role, image_url, description, display_order) VALUES\n` +
+                        `('Miruts Tesfaye Gebrekidan', 'Managing Director', '/src/assets/images/miruts_gebrekidan_1781614046333.jpg', 'Exemplary leader steering the firm with strong governance, strategic foresight, and over 15 years of industry excellence.', 1),\n` +
+                        `('Tsega Tadesse Hagos', 'Technical Director', '/src/assets/images/tsega_hagos_1781614065993.jpg', 'Meticulous engineering authority directing complex project designs, feasibility evaluations, and BIM twin integration.', 2),\n` +
+                        `('Musika Johnson', 'Chief Operations Officer', '/src/assets/images/musika_johnson_1781614085015.jpg', 'Operations mastermind driving strict project timelines, resource optimization, and premium workmanship qualities on site.', 3)\n` +
+                        `ON CONFLICT DO NOTHING;`;
+                        
+                      navigator.clipboard.writeText(sqlText);
+                      setSqlCopied(true);
+                      setTimeout(() => setSqlCopied(false), 2000);
+                    }}
+                    className="flex-grow border border-stone-900 bg-white hover:bg-stone-50 text-stone-900 py-3 px-4 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 rounded-xs transition-all cursor-pointer"
+                  >
+                    <Check className={`w-3.5 h-3.5 text-emerald-600 ${sqlCopied ? 'block' : 'hidden'}`} />
+                    <span>{sqlCopied ? 'Copied Team Table SQL!' : 'Copy Team Table SQL'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      const fullSql = `-- --------------------------------------------------------------------\n` +
+                        `-- GRACENM CONSULTANTS & CONSTRUCTION COMPANY LTD\n` +
+                        `-- FULL SCHEMA DATABASE SCRIPT WITH TEAM\n` +
+                        `-- --------------------------------------------------------------------\n\n` +
+                        `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";\n\n` +
+                        `CREATE TABLE IF NOT EXISTS public.team_members (\n` +
+                        `    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n` +
+                        `    name VARCHAR(255) NOT NULL,\n` +
+                        `    role VARCHAR(150) NOT NULL,\n` +
+                        `    image_url TEXT NOT NULL,\n` +
+                        `    description TEXT NOT NULL,\n` +
+                        `    display_order INT DEFAULT 0,\n` +
+                        `    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL\n` +
+                        `);\n` +
+                        `ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;\n` +
+                        `DROP POLICY IF EXISTS "Allow public read access to team members" ON public.team_members;\n` +
+                        `CREATE POLICY "Allow public read access to team members" ON public.team_members FOR SELECT USING (true);\n` +
+                        `DROP POLICY IF EXISTS "Allow public updates to team members" ON public.team_members;\n` +
+                        `CREATE POLICY "Allow public updates to team members" ON public.team_members FOR ALL USING (true) WITH CHECK (true);\n\n` +
+                        `CREATE TABLE IF NOT EXISTS public.site_settings (\n` +
+                        `    id VARCHAR(50) PRIMARY KEY DEFAULT 'primary_settings',\n` +
+                        `    config JSONB NOT NULL,\n` +
+                        `    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL\n` +
+                        `);\n` +
+                        `ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;\n` +
+                        `DROP POLICY IF EXISTS "Allow public read access to settings" ON public.site_settings;\n` +
+                        `CREATE POLICY "Allow public read access to settings" ON public.site_settings FOR SELECT USING (true);\n` +
+                        `DROP POLICY IF EXISTS "Allow public updates to settings" ON public.site_settings;\n` +
+                        `CREATE POLICY "Allow public updates to settings" ON public.site_settings FOR ALL USING (true) WITH CHECK (true);\n\n` +
+                        `CREATE TABLE IF NOT EXISTS public.contact_submissions (\n` +
+                        `    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n` +
+                        `    name VARCHAR(255) NOT NULL,\n` +
+                        `    email VARCHAR(255) NOT NULL,\n` +
+                        `    phone VARCHAR(50) NOT NULL,\n` +
+                        `    subject VARCHAR(255) NOT NULL,\n` +
+                        `    message TEXT NOT NULL,\n` +
+                        `    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL\n` +
+                        `);\n` +
+                        `ALTER TABLE public.contact_submissions ENABLE ROW LEVEL SECURITY;\n` +
+                        `DROP POLICY IF EXISTS "Allow anonymous submission insertions" ON public.contact_submissions;\n` +
+                        `CREATE POLICY "Allow anonymous submission insertions" ON public.contact_submissions FOR INSERT WITH CHECK (true);\n\n` +
+                        `-- Default Insertion\n` +
+                        `INSERT INTO public.team_members (name, role, image_url, description, display_order) VALUES\n` +
+                        `('Miruts Tesfaye Gebrekidan', 'Managing Director', '/src/assets/images/miruts_gebrekidan_1781614046333.jpg', 'Exemplary leader steering the firm with strong governance, strategic foresight, and over 15 years of industry excellence.', 1),\n` +
+                        `('Tsega Tadesse Hagos', 'Technical Director', '/src/assets/images/tsega_hagos_1781614065993.jpg', 'Meticulous engineering authority directing complex project designs, feasibility evaluations, and BIM twin integration.', 2),\n` +
+                        `('Musika Johnson', 'Chief Operations Officer', '/src/assets/images/musika_johnson_1781614085015.jpg', 'Operations mastermind driving strict project timelines, resource optimization, and premium workmanship qualities on site.', 3)\n` +
+                        `ON CONFLICT DO NOTHING;`;
+
+                      navigator.clipboard.writeText(fullSql);
+                      alert("Entire database setup schema script copied! You can paste and run this on your Supabase SQL editor now.");
+                    }}
+                    className="flex-grow border border-stone-900 bg-stone-900 hover:bg-stone-800 text-white py-3 px-4 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 rounded-xs transition-all cursor-pointer"
+                  >
+                    <span>Copy Full Schema SQL</span>
+                  </button>
+                </div>
+
+                <div className="border border-stone-200 bg-stone-50 p-4 rounded-xs">
+                  <p className="text-[10px] uppercase font-bold text-stone-500 tracking-wider mb-2">TEAM_MEMBERS TABLE CREATION SQL MIGRATION CODE:</p>
+                  <pre className="text-[10px] text-stone-700 font-mono overflow-x-auto bg-white p-3.5 border border-stone-150 leading-relaxed max-h-[14rem] rounded-xs shadow-inner select-all block">
+{`-- Create table
+CREATE TABLE IF NOT EXISTS public.team_members (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    role VARCHAR(150) NOT NULL,
+    image_url TEXT NOT NULL,
+    description TEXT NOT NULL,
+    display_order INT DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Enable RLS Security
+ALTER TABLE public.team_members ENABLE ROW LEVEL SECURITY;
+
+-- Create Policies
+CREATE POLICY "Allow public read access to team members"
+ON public.team_members FOR SELECT USING (true);
+
+CREATE POLICY "Allow public updates to team members"
+ON public.team_members FOR ALL USING (true) WITH CHECK (true);`}
+                  </pre>
+                </div>
               </div>
             </div>
           )}

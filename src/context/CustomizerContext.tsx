@@ -208,6 +208,29 @@ export function CustomizerProvider({ children }: { children: React.ReactNode }) 
             config: config, 
             updated_at: new Date().toISOString() 
           });
+
+        if (config.team && config.team.length > 0) {
+          try {
+            await supabase
+              .from("team_members")
+              .delete()
+              .gte("display_order", 0);
+
+            const insertData = config.team.map(member => ({
+              name: member.name,
+              role: member.role,
+              image_url: member.image,
+              description: member.desc,
+              display_order: member.display_order
+            }));
+
+            await supabase
+              .from("team_members")
+              .insert(insertData);
+          } catch (teamSyncErr: any) {
+            console.warn("Table team_members might be pending schema execution or not accessible:", teamSyncErr.message);
+          }
+        }
       } catch (err) {
         console.warn("Failed to sync branding customization to Supabase database (saved locally in browser):", err);
       }
